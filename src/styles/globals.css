@@ -1,0 +1,25 @@
+.outer {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body {
+  overflow-y: hidden;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  border: 1px solid gray;
+  border-radius: 10px;
+  height: 200px;
+  width: 114px;
+}
+.card_container {
+  flex-wrap: wrap;
+  width: 800px;
+  display: flex;
+  gap: 10px;
+}
