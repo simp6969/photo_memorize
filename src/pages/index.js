@@ -1,8 +1,8 @@
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function App() {
   const [clicked, setClicked] = useState(false);
-  const [clickedOnce, setClickedOnce] = useState();
   const [property, setProperty] = useState([
     {
       path: "./images/photo1.jpg",
@@ -65,62 +65,56 @@ export default function App() {
       id: Math.floor(Math.random() * 100000),
     },
   ]);
-  const [clicks, setClicks] = useState(0);
-  const [id1, setId1] = useState();
+  const [click, setClick] = useState(1);
+  const [fisrtClick, setFirstClick] = useState();
+  const [globalID, setGlobalID] = useState();
   useEffect(() => {
     const shuffledProperty = [...property].sort(() => Math.random() - 0.5);
     setProperty(shuffledProperty);
   }, []);
   function handleCardClick(id, path) {
-    setClicks(clicks + 1);
-
+    setClick(click + 1);
     const updatedProperty = property.map((card) => {
-      if (card.id === id) {
+      if (card.id == id) {
         return { ...card, clicked: !card.clicked };
       }
       return card;
     });
-
     setProperty(updatedProperty);
+    if (click === 1) {
+      setFirstClick(path);
+      setGlobalID(id);
+    } else if (click === 2) {
+      setClick(1);
 
-    if (clicks === 0) {
-      setId1(id);
-      setClickedOnce(path);
-    } else if (clicks === 1) {
-      if (clickedOnce === path) {
-        if (id1 === id) {
-          console.log("That's cheating!");
-        } else {
-          alert("Same photo");
-          const new_prop = property.filter((element) => element.id == id);
-          const new_prop1 = property.filter(
-            (element) => element.path == clickedOnce
-          );
-          property.pop(new_prop1);
-          property.pop(new_prop);
-        }
-      }
-      setClicks(0);
       setTimeout(() => {
-        const updatedProperty = property.map((card) => {
-          if (card.id === id1 && card.path === clickedOnce) {
-            return { ...card, clicked: !card.clicked };
-          }
-          return card;
+        let newProp = property.map((element) => {
+          return { ...element, clicked: false };
         });
-
-        setProperty(updatedProperty);
-      }, 1000);
+        setProperty(newProp);
+        if (fisrtClick === path) {
+          if (id == globalID) {
+            return;
+          } else {
+            alert("same photo");
+            let updated = property.filter(
+              (element) => element.path !== fisrtClick && element.path !== path
+            );
+            console.log(updated);
+            setProperty(updated);
+          }
+        }
+      }, 500);
     }
   }
-
   return (
     <div className="outer">
+      <h1>jaja</h1>
       <div className="card_container">
-        {property.map((element) => {
+        {property.map((element, index) => {
           return (
             <div
-              key={element.id}
+              key={index}
               className="cards"
               onClick={() => handleCardClick(element.id, element.path)}
             >
